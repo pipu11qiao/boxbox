@@ -15,49 +15,12 @@ var rev = require('gulp-rev');
 var revCollector = require('gulp-rev-collector');
 var connect = require('gulp-connect');
 var sequence = require('gulp-sequence');
-var sass = require('gulp-sass');
-var sourcemaps = require('gulp-sourcemaps');
 //--------------------------------------- develop --------------------------------
 var DEST = 'dist/customView'; // 文件路径
 var CSSPATH = DEST + '/css'; // css文件路径
 var JSPATH = DEST + '/js'; // js 文件路径
 
 //-------------------------- develop   编译Customview.js
-
-var pluginPath = 'develop/plugin/'; // 项目用到的插件路径
-// 合并插件 js
-gulp.task('jsPlugin', function () {
-    var version = require('./package.json').version;
-    return gulp
-        .src([
-            pluginPath + 'bootstrap/js/bootstrap.min.js',
-            pluginPath + 'swiper/js/swiper.jquery.min.js',
-            pluginPath + 'jquery.mCustomScrollbar/jquery.mCustomScrollbar.concat.min.js',
-            pluginPath + 'jQuery-ajaxTransport-XDomainRequest-master/jQuery.XdomainRequest.js',
-            pluginPath + 'jquery-qrcode-master/jquery.qrcode.min.js'
-        ])
-        .pipe(concat("customViewPlugin-" + version + ".js"))
-        .pipe(uglify())
-        .pipe(rename({extname: '.min.js'}))
-        .pipe(gulp.dest('develop/common/js'));
-});
-
-// 合并插件 css-prev
-gulp.task('cssPlugin', function () {
-    var version = require('./package.json').version;
-    return gulp
-        .src([
-            pluginPath + 'bootstrap/css-prev/bootstrap.min.css',
-            pluginPath + 'swiper/css-prev/swiper.min.css',
-            pluginPath + 'jquery.mCustomScrollbar/jquery.mCustomScrollbar.min.css',
-        ])
-        .pipe(concat('customViewPlugin-' + version + '.css'))
-        .pipe(minify())
-        .pipe(rename({extname: '.min.css'}))
-        .pipe(gulp.dest('develop/common/css-prev/'));
-});
-// 合并插件的js和css
-gulp.task('plugin',['jsPlugin','cssPlugin']);
 
 // 本地热加载
 gulp.task('reload',function () {
@@ -140,19 +103,5 @@ gulp.task('html',function () {
         .pipe(revCollector())
         .pipe(gulp.dest('dist/'));
 });
-// 添加sass功能
-
-gulp.task('compileSass',function () {
-   return gulp.src('develop/customView/sass/customView.scss')
-       .pipe(sourcemaps.init())
-       .pipe(sass().on('error',sass.logError))
-       .pipe(sourcemaps.write())
-       .pipe(gulp.dest('develop/customView/css'));
-});
-
-gulp.task('watchsass',function () {
-   gulp.watch('develop/customView/sass/**/*.scss',['compileSass']);
-});
-gulp.task('sass',['compileSass','watchsass']);
 
 gulp.task('build',sequence('clean','move1','move2','css','js','html'));

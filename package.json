@@ -1,0 +1,19 @@
+{
+  "name": "boxbox",
+  "version": "1.0.0",
+  "description": "```npm\r     npm install\r ```\r #### 编译生产文件",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pipu11qiao/boxbox.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pipu11qiao/boxbox/issues"
+  },
+  "homepage": "https://github.com/pipu11qiao/boxbox#readme"
+}

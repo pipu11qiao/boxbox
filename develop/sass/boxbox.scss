@@ -1,0 +1,17 @@
+
+// 帮助的文件
+@import "helpers/reset";
+@import "helpers/variables";
+@import "helpers/mixin";
+
+// 页面的样式
+@import "pages/page";
+
+// 页面中的组件
+@import "components/page-modal";
+@import "components/showingView";
+@import "components/btnView";
+@import "components/shareView";
+@import "components/shoppingList";
+@import "components/optionView";
+@import "components/zoom-img";

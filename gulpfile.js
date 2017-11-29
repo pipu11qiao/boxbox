@@ -34,13 +34,13 @@ gulp.task('reload',function () {
 });
 // 本地监视文件
 gulp.task('watch',function () {
-    gulp.watch([cssPath + '*.css',jsPath + '*.js'],['reload']);
+    gulp.watch([cssPath + '*.css',jsPath + '*.js',devPath + '*.html'],['reload']);
 });
 // 本地服务器
 gulp.task('server',['sass'],function () {
     connect.server({
         root: './',
-        port: 8080,
+        port: 888,
         livereload: true
     });
 });
@@ -122,4 +122,4 @@ gulp.task('dev',['server','watch']);
 //         .pipe(gulp.dest('dist/'));
 // });
 
-gulp.task('build',sequence('clean','move1','move2','css','js','html'));
+// gulp.task('build',sequence('clean','move1','move2','css','js','html'));

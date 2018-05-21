@@ -15,8 +15,8 @@ var del = require('del'); // 删除
 // var revCollector = require('gulp-rev-collector');
 var connect = require('gulp-connect');
 // var sequence = require('gulp-sequence');
-var sass = require('gulp-sass');
-var sourcemaps = require('gulp-sourcemaps');
+// var sass = require('gulp-sass');
+// var sourcemaps = require('gulp-sourcemaps');
 //--------------------------------------- develop --------------------------------
 // var DEST = 'dist/customView'; // 文件路径
 // var CSSPATH = DEST + '/css'; // css文件路径
@@ -28,16 +28,17 @@ var jsPath = devPath + 'js/';
 var cssPath = devPath + 'css/';
 var scssPath = devPath + 'sass/';
 // 本地热加载
-gulp.task('reload',function () {
+gulp.task('reload', function () {
     gulp.src(devPath + '*.html')
         .pipe(connect.reload());
 });
 // 本地监视文件
-gulp.task('watch',function () {
-    gulp.watch([cssPath + '*.css',jsPath + '*.js',devPath + '*.html'],['reload']);
+gulp.task('watch', function () {
+    gulp.watch([cssPath + '*.css', jsPath + '*.js', devPath + '*.html'], ['reload']);
 });
 // 本地服务器
-gulp.task('server',['sass'],function () {
+// gulp.task('server',['sass'],function () {
+gulp.task('server',function () {
     connect.server({
         root: './',
         port: 888,
@@ -45,20 +46,20 @@ gulp.task('server',['sass'],function () {
     });
 });
 
-gulp.task('compileSass',function () {
+gulp.task('compileSass', function () {
     return gulp.src(scssPath + 'boxbox.scss')
         .pipe(sourcemaps.init())
-        .pipe(sass().on('error',sass.logError))
+        .pipe(sass().on('error', sass.logError))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(cssPath));
 });
 
-gulp.task('watchsass',function () {
-    gulp.watch(scssPath + '**/*.scss',['compileSass']);
+gulp.task('watchsass', function () {
+    gulp.watch(scssPath + '**/*.scss', ['compileSass']);
 });
-gulp.task('sass',['compileSass','watchsass']);
+gulp.task('sass', ['compileSass', 'watchsass']);
 // 本地开发任务
-gulp.task('dev',['server','watch']);
+gulp.task('dev', ['server', 'watch']);
 // // develop 生产 -----------------------------------------------------
 //
 // // 清楚原来dist中的文件

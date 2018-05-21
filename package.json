@@ -9,6 +9,7 @@
   },
   "repository": {
     "type": "git",
+    "dev": "gulp deb",
     "url": "git+https://github.com/pipu11qiao/boxbox.git"
   },
   "author": "",

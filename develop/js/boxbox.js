@@ -64,16 +64,16 @@
         {r: 10, c: 9}
       ],
       person: [
-        []
+        {r:8,c:9}
       ]
-
     }
   ];
   var offset = {
     block: [0, 0],
     ball: [-2.5, -2.5],
     box: [0, 10],
-    wall: [0, 11]
+    wall: [0, 11],
+    right: [0,10],
   };
   var Game = function (options) {
     this._el = $('#box').get(0);
@@ -164,7 +164,7 @@
           // 绘制箱子
           this.draw(curMision.box, 'box', r, c);
           // 绘制小人
-          // this.draw(curMision.)
+          this.draw(curMision.person,'right',r,c);
           // 绘制墙
           this.draw(curMision.wall, 'wall', r, c);
         }

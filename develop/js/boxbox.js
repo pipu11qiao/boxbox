@@ -5,6 +5,7 @@
   // 3.是否开启动效
   // 4.是否可以后退，最大后退步数
 
+  // modalType  BG Ball Wall Box Soldier
   var defaultOption = {
     width: 560,
     height: 560,

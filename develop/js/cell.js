@@ -3,7 +3,7 @@
     var Super = function () {
     };
     Super.prototype = parent.prototype;
-    child.prototype = new Fun();
+    child.prototype = new Super();
     child.prototype.constructor = child;
   };
   // 基础类cell
@@ -39,6 +39,9 @@
     },
     getViewObj: function () {
       return this.viewObj;
+    },
+    getIndex: function () {
+      return this.index;
     }
   };
 
@@ -50,7 +53,7 @@
     this.pass = 1;
   };
   setPrototype(VirtualCell, Cell);
-  var EntityCell = function () {
+  var EntityCell = function (r,c,viewObj) {
     Cell.call(this, r, c,viewObj);
     this.pass = 0;
   };
@@ -102,21 +105,21 @@
     this.direction = options.direction;
   };
   setPrototype(Soldier,EntityCell);
-  Soldier.getDirection = function () {
+  Soldier.prototype.getDirection = function () {
     return this.direction;
   };
-  Soldier.setDirection = function (direction) {
+  Soldier.prototype.setDirection = function (direction) {
     this.direction = direction || 'right';
   };
-  Soldier.getViewObj = function () {
+  Soldier.prototype.getViewObj = function () {
     return this.viewObj[this.direction];
   };
   var CellModal = {
     BG: BG,
-    Ball: Ball,
-    Wall: Wall,
-    Box: Box,
-    Soldier: Soldier
+    BALL: Ball,
+    WALL: Wall,
+    BOX: Box,
+    SOLDIER: Soldier
   };
   window.createModal = function (type,options) {
     return new CellModal[type](options);

@@ -6,11 +6,31 @@
   <link rel="stylesheet" href="css/boxbox.css">
 </head>
 <body>
+
 <div class="game-box">
+  <header>
+    <div class="info-box">当前关:<span class="mission-info">1/3</span> </div>
+    <div class="info-box">步数:<span class="step-info">20</span> </div>
+    <a href="" class="btn" data-tag="refresh">重玩本关</a>
+    <a href="" class="btn" data-tag="backup">后退一步</a>
+  </header>
   <canvas id="box"></canvas>
+  <div class="veil-outer">
+    <div class="veil-bg"></div>
+    <div class="veil-inner">
+      <a href="" class="btn" data-tag="next">下一关</a>
+    </div>
+  </div>
 </div>
+
 <script src="common/js/jquery-1.9.1.min.js"></script>
+<script src="js/loadImg.js"></script>
 <script src="js/cell.js"></script>
 <script src="js/boxbox.js"></script>
+<script>
+  var game = new Game({
+    el: $('.game-box')
+  });
+</script>
 </body>
 </html>

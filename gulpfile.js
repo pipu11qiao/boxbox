@@ -3,24 +3,21 @@
  */
 // 将项目中个模块的js和css合并到一起
 var gulp = require('gulp');
-// var concat = require('gulp-concat'); // 文件合并
-// var uglify = require('gulp-uglify'); // js压缩
-// var minify = require('gulp-minify-css'); // css-prev 压缩
-// var rename = require('gulp-rename'); // 重命名
+var concat = require('gulp-concat'); // 文件合并
+var uglify = require('gulp-uglify'); // js压缩
+var minify = require('gulp-minify-css'); // css-prev 压缩
+var rename = require('gulp-rename'); // 重命名
 var del = require('del'); // 删除
 
-// var postcss = require('gulp-postcss');
-// var autoprefixer = require('autoprefixer');
-// var rev = require('gulp-rev');
-// var revCollector = require('gulp-rev-collector');
+var postcss = require('gulp-postcss');
+var autoprefixer = require('autoprefixer');
+var rev = require('gulp-rev');
+var revCollector = require('gulp-rev-collector');
 var connect = require('gulp-connect');
-// var sequence = require('gulp-sequence');
-// var sass = require('gulp-sass');
-// var sourcemaps = require('gulp-sourcemaps');
-//--------------------------------------- develop --------------------------------
-// var DEST = 'dist/customView'; // 文件路径
-// var CSSPATH = DEST + '/css'; // css文件路径
-// var JSPATH = DEST + '/js'; // js 文件路径
+var sequence = require('gulp-sequence');
+var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
+//-------------------------------------- develop --------------------------------
 
 //-------------------------- develop   编译Customview.js
 var devPath = 'develop/';
@@ -38,7 +35,7 @@ gulp.task('watch', function () {
 });
 // 本地服务器
 // gulp.task('server',['sass'],function () {
-gulp.task('server',function () {
+gulp.task('server',['sass'],function () {
     connect.server({
         root: './',
         port: 888,

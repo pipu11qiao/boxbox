@@ -1,3 +1,24 @@
+(function() {
+  // requestAnimationFrame Pollyfill
+  var lastTime = 0;
+  var vendors = ['ms', 'moz', 'webkit', 'o'];
+  for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+    window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame']
+  }
+  if (!window.requestAnimationFrame) window.requestAnimationFrame = function(callback, element) {
+    var currTime = new Date().getTime();
+    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+    var id = window.setTimeout(function() {
+      callback(currTime + timeToCall)
+    }, timeToCall);
+    lastTime = currTime + timeToCall;
+    return id;
+  };
+  if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function(id) {
+    clearTimeout(id)
+  };
+}());
 ;(function (window, document, $, undefine) {
   // 可以设置的部分
   // 1.画布的长宽和在长宽方向每个格子的数量     // 视图设置
@@ -24,11 +45,12 @@
       },
       box:{
        img: 'images/box.png',
-       offset:  [0, 10]
+       offset:  [0, 0]
       },
       wall: {
         img: 'images/wall.png',
-        offset: [0, 11]
+        // offset: [0, 11]
+        offset: [0, 0]
       },
       soldier: {
         img: {
@@ -38,7 +60,7 @@
           up: 'images/up.png',
           down: 'images/down.png'
         },
-        offset: [0,10]
+        offset: [0,0]
       }
     }
   };
@@ -59,6 +81,7 @@
     },
     getMission: function () {
       return this.missions[this.curMission -1];
+      // return this.missions[2];
     },
     getMissionsCount: function () {
       return this.missions.length;
@@ -120,6 +143,21 @@
       ],
       soldier: '6,6'
     });
+    // this.missionObj.addMission({
+    //   wall: [
+    //     '5,7', '5,8', '5,9',
+    //     '6,7', '6,9',
+    //     '7,7', '7,9', '7,10', '7,11', '7,12',
+    //     '8,5', '8,6', '8,7', '8,12',
+    //     '9,5', '9,10', '9,11', '9,12',
+    //     '10,5', '10,6', '10,7', '10,8', '10,10',
+    //     '11,8', '11,10',
+    //     '12,8', '12,9', '12,10'
+    //   ],
+    //   ball: [],
+    //   box: [],
+    //   soldier: '8,9'
+    // });
     this.init();
   };
   Game.prototype = {
@@ -276,24 +314,39 @@
         return baseCell;
       }
     },
-    draw: function (cellArr) {
+    draw: function (cell) {
+      var viewObj = cell.getViewObj();
+      var pos = cell.getPaintPos();
+      // 如果在移动就会出现被后来的覆盖的情况
+      if(cell.move){
+        // debugger;
+        // debugger;
+      }
+      var offsetX = viewObj.offset[0];
+      var offsetY = viewObj.offset[1];
+      var x = (pos.c - 1) * this.cellWidth - offsetX ;
+      var y = (pos.r - 1) * this.cellHeight - offsetY;
 
+      var width = this.cellWidth + offsetX;
+      var height = this.cellHeight + offsetY;
+
+      this._ctx.drawImage(viewObj.img, x, y, width, height);
+    },
+
+    drawCells: function (cellArr) {
       for (var i = 0, len = cellArr.length; i < len; i++) {
-        var cell = cellArr[i];
-        var viewObj = cell.getViewObj();
-        var pos = cell.getPos();
-        var offsetX = viewObj.offset[0];
-        var offsetY = viewObj.offset[1];
-        var x = (pos.c - 1) * this.cellWidth - offsetX ;
-        var y = (pos.r - 1) * this.cellHeight - offsetY;
-        var width = this.cellWidth + offsetX;
-        var height = this.cellHeight + offsetY;
-        this._ctx.drawImage(viewObj.img, x, y, width, height);
+        this.draw(cellArr[i]);
       }
     },
     paint: function () {
       // 绘制
       // 先对所有的cell进行hash
+      // 绘制北京
+      this.drawCells(this.cells.bg);
+      this.drawCells(this.cells.ball);
+      this.drawCells(this.cells.wall);
+      this.drawCells(this.cells.box);
+      this.draw(this.cells.soldier);
       this.hashCells = {};
       var hashCells = this.hashCells;
       for(var key in this.cells) {
@@ -310,22 +363,29 @@
       var soliderCell = this.cells.soldier;
       hashCells.soldier = {};
       hashCells.soldier['r' + soliderCell.r + 'c' + soliderCell.c] = soliderCell;
-      for (var r = 0; r <= this.numV; r++) {
-        for (var c = 0; c <= this.numH; c++) {
-          var allCell = [];
-          var curKey = 'r' + (r +1) + 'c' + (c + 1);
-          for(var key in hashCells) {
-            if(hashCells[key][curKey]){
-              allCell.push(hashCells[key][curKey])
-            }
-          }
-          // allcell 中有所遇的cell对象
-          var resultCell = this.getResultCell(allCell);
-          resultCell.sort(function (item1,item2) {
-            return item1.getIndex() - item2.getIndex();
-          });
-          this.draw(resultCell);
-        }
+
+      // 判断当前所有的cell中
+      var needMove = false;
+      needMove = this.cells.box.some(function (item) {
+        return item.move
+      });
+      if(!needMove){
+        needMove = this.cells.soldier.move;
+      }
+      var me = this;
+
+      if(needMove) {
+        this.animateId = requestAnimationFrame(function (number) {
+          me.paint();
+        });
+      }else {
+        this.drawCells(this.cells.bg);
+        this.drawCells(this.cells.ball);
+        this.drawCells(this.cells.wall);
+        this.drawCells(this.cells.box);
+        this.draw(this.cells.soldier);
+        cancelAnimationFrame(this.animateId);
+        this.animateId = null;
       }
     },
     bindControl: function () {
@@ -390,8 +450,6 @@
       var canMove = false;
       var soldier = this.cells.soldier;
       var soldierPos = soldier.getPos();
-      soldierPos.r = -(-soldierPos.r);
-      soldierPos.c = -(-soldierPos.c);
       var nextPos = {
         r: directionKey === 'r' ? soldierPos.r + directionNum : soldierPos.r,
         c:directionKey === 'c' ? soldierPos.c + directionNum : soldierPos.c
@@ -402,7 +460,6 @@
       var nextNextKey;
       // 下一步是否是箱子
       if(this.hashCells.box[nextKey]) {
-        // debugger;
         //是箱子
         nextIsBox = true;
         nextNextPos = {
@@ -423,7 +480,9 @@
           canMove = true;
         }
       }
+
       if(canMove){
+
         soldier.setPos(nextPos.r,nextPos.c);
         if(nextIsBox){
           var box = this.hashCells.box[nextKey];
@@ -433,8 +492,10 @@
         this.renderStepInfo();
         this.updateBackup();
       }
+
       soldier.setDirection(direction);
       this.paint();
+
       if(canMove && nextIsBox) {
         this.judgeFinish();
       }

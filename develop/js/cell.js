@@ -85,67 +85,54 @@
     }
   };
 
-  /***************      虚拟的类 ball bg          ************/
-  /***************      实体的类 wall soldier box  ************/
-
-  var VirtualCell = function (r, c,viewObj) {
-    Cell.call(this, r, c,viewObj);
-    this.pass = 1;
-  };
-  setPrototype(VirtualCell, Cell);
-  var EntityCell = function (r,c,viewObj) {
-    Cell.call(this, r, c,viewObj);
-    this.pass = 0;
-  };
-  setPrototype(EntityCell, Cell);
 
   /*************************  具体的类  ************************************/
   // 背景
   var BG = function (options) {
-    VirtualCell.call(this,options.r,options.c,options.viewObj);
+    Cell.call(this,options.r,options.c,options.viewObj);
     this.coverPriority = '';
     this.index = 0;
     this.viewObj = options.viewObj;
     this.name = 'bg';
     } ;
-  setPrototype(BG,VirtualCell);
+  setPrototype(BG,Cell);
 
   // ball
   var Ball = function (options) {
-    VirtualCell.call(this,options.r,options.c,options.viewObj);
+    Cell.call(this,options.r,options.c,options.viewObj);
     this.coverPriority = 0; // 会被覆盖
     this.index = 1;
     this.name = 'ball';
   };
-  setPrototype(Ball,VirtualCell);
+  setPrototype(Ball,Cell);
 
   // wall
   var Wall = function (options) {
-    EntityCell.call(this,options.r,options.c,options.viewObj);
+    Cell.call(this,options.r,options.c,options.viewObj);
     this.coverPriority = 1; // 会被覆盖
     this.index = 2;
     this.name = 'wall';
   };
-  setPrototype(Wall,EntityCell);
+  setPrototype(Wall,Cell);
 
   // Box
   var Box = function (options) {
-    EntityCell.call(this,options.r,options.c,options.viewObj);
+    Cell.call(this,options.r,options.c,options.viewObj);
     this.coverPriority = 1; // 会被覆盖
     this.index = 2;
     this.name = 'box';
   };
-  setPrototype(Box,EntityCell);
+  setPrototype(Box,Cell);
 
   // soldier 可以移动的部分
   var Soldier = function (options) {
-    EntityCell.call(this,options.r,options.c,options.viewObj);
+    Cell.call(this,options.r,options.c,options.viewObj);
     this.coverPriority = 1; // 会被覆盖
     this.index = 2;
     this.name = 'soldier';
     this.direction = options.direction;
   };
-  setPrototype(Soldier,EntityCell);
+  setPrototype(Soldier,Cell);
   Soldier.prototype.getDirection = function () {
     return this.direction;
   };

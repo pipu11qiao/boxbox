@@ -379,11 +379,6 @@
           me.paint();
         });
       }else {
-        this.drawCells(this.cells.bg);
-        this.drawCells(this.cells.ball);
-        this.drawCells(this.cells.wall);
-        this.drawCells(this.cells.box);
-        this.draw(this.cells.soldier);
         cancelAnimationFrame(this.animateId);
         this.animateId = null;
       }
